@@ -1,0 +1,31 @@
+show_progress(0.200000, 0);
+ui_print("==========================================");
+ui_print("              _____ _    _  __            "); 
+ui_print("             / ____| |  | |/ /            ");
+ui_print("            | (___ | |  | ' /             ");
+ui_print("             \___ \| |  |  <              ");
+ui_print("             ____) | |__| . \             ");
+ui_print("            |_____/|____|_|\_\            ");                
+ui_print("                                          ");                    
+ui_print("==========================================");
+ui_print("          [S]aber[L]iquid[K]ernel         ");
+ui_print("                  [BASIC]                 ");  
+ui_print("               [ext4][F2FS]               ");
+ui_print("              [KK][4.4] ROMS              ");
+ui_print("                by ALKemiX                ");
+ui_print("==========================================");
+ui_print(" ");
+run_program("/sbin/busybox", "mount", "/system");
+assert(getprop("ro.product.device") == "maguro" || getprop("ro.build.product") == "maguro" ||
+       getprop("ro.product.device") == "toro" || getprop("ro.build.product") == "toro" ||
+       getprop("ro.product.device") == "toroplus" || getprop("ro.build.product") == "toroplus");
+ui_print(" ");
+unmount("/system");
+ui_print("Installo il kernel...");
+assert(package_extract_file("boot.img", "/dev/block/platform/omap/omap_hsmmc.0/by-name/boot"));
+show_progress(0.200000, 0);
+ui_print(" ");
+ui_print("==========================================");
+ui_print("        Installazione completata !        ");
+ui_print("           Buon divertimento              ");
+ui_print("==========================================");
