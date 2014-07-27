@@ -1,0 +1,28 @@
+#!/system/bin/sh
+bb=/sbin/bb/busybox
+
+# init.d support
+if [ ! -e /system/etc/init.d ] ; then
+  $bb mount -o remount,rw /system
+  $bb mkdir /system/etc/init.d
+  $bb chown -R root.root /system/etc/init.d
+  $bb chmod -R 755 /system/etc/init.d
+  $bb mount -o remount,ro /system
+fi
+
+# execute init.d scripts
+$bb run-parts /system/etc/init.d
+
+# wait for systemui to be up
+until [ $($bb pgrep com.android.systemui) ] ; do
+  $bb sleep 1
+done
+
+# workaround for hung boots with nodiratime+noatime or barrier=0+data=writeback
+# which occur when used as ext4 mount options for userdata via the tuna fstab
+$bb [ `getprop ro.fs.data` == "ext4" ] && $bb mount -o remount,nosuid,nodev,noatime,nodiratime,barrier=0 -t auto /data;
+
+# set max cpu freq again because it may have been overwritten by the OS
+$bb echo 1200000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+
+
